@@ -3,9 +3,9 @@ from fastapi import FastAPI
 app = FastAPI()
 
 @app.get("/")
-def home():
-    return {"message": "CasaConnect API is Online"}
+def read_root():
+    return {"message": "Welcome to CasaConnect API"}
 
-@app.get("/data")
-def get_data():
-    return {"items": ["House A", "House B", "House C"]}
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: str = None):
+    return {"item_id": item_id, "query": q}

@@ -1,30 +1,49 @@
-import { Tabs } from 'expo-router';
-import { useRouter, useSegments } from 'expo-router';
-import { useEffect } from 'react';
+import { Stack, useRouter, useSegments } from 'expo-router';
+import { useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 
-const isUserLoggedIn = false; 
+import { getTenantLoggedIn } from '../_auth/session';
 
 export default function TenantLayout() {
   const segments = useSegments();
   const router = useRouter();
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean | null>(null);
+
+  const inAuthGroup = useMemo(() => {
+    return segments[1] === 'login' || segments[1] === 'register';
+  }, [segments]);
 
   useEffect(() => {
-    const inAuthGroup = segments[1] === 'login' || segments[1] === 'register';
+    // Web refresh loses JS memory; read from localStorage instead.
+    setIsUserLoggedIn(getTenantLoggedIn());
+  }, []);
 
+  useEffect(() => {
+    // Don't redirect until we know the stored auth state.
+    if (isUserLoggedIn === null) return;
     if (!isUserLoggedIn && !inAuthGroup) {
       router.replace('/tenant/login');
     }
-  }, [isUserLoggedIn, segments]);
+  }, [isUserLoggedIn, inAuthGroup, router]);
+
+  if (isUserLoggedIn === null && !inAuthGroup) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: '#2f95dc' }}>
-      <Tabs.Screen name="home" options={{ title: 'Home' }} />
-      <Tabs.Screen name="map" options={{ title: 'Map' }} />
-      <Tabs.Screen name="chat" options={{ title: 'Chat' }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
-      {/* Hide these from the actual Tab Bar bottom menu */}
-      <Tabs.Screen name="login" options={{ href: null, headerShown: false }} />
-      <Tabs.Screen name="register" options={{ href: null, headerShown: false }} />
-    </Tabs>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="home" />
+      <Stack.Screen name="map" />
+      <Stack.Screen name="chat" />
+      <Stack.Screen name="profile" />
+      <Stack.Screen name="search" />
+      {/* auth routes */}
+      <Stack.Screen name="login" />
+      <Stack.Screen name="register" />
+    </Stack>
   );
 }

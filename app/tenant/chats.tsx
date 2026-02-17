@@ -2,11 +2,11 @@ import { Stack } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function TenantSearchScreen() {
+export default function TenantChatScreen() {
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: "Search" }} />
-      <Text style={styles.text}>Search screen (coming soon)</Text>
+      <Stack.Screen options={{ title: "Chat" }} />
+      <Text style={styles.text}>Chat screen (coming soon)</Text>
     </View>
   );
 }

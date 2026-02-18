@@ -23,11 +23,12 @@ export default function InteractiveMap(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, // This must stay
     backgroundColor: "#eef6ff",
-    alignItems: "center",
-    justifyContent: "center",
+    // REMOVE alignItems: "center"
+    // REMOVE justifyContent: "center"
   },
+  // You can keep the text style even if unused
   text: { color: "#2f95dc", fontWeight: "700" },
 });
 

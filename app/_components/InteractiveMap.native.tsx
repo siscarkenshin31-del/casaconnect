@@ -32,3 +32,4 @@ const styles = StyleSheet.create({
   text: { color: "#2f95dc", fontWeight: "700" },
 });
 
+
